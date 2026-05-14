@@ -16,7 +16,9 @@ export default function SignInForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
   const [serverError, setServerError] = useState("");
 
   const validate = () => {
@@ -49,13 +51,15 @@ export default function SignInForm() {
       await login(email, password);
       navigate("/home"); // 🔧 Change to your post-login route
     } catch (err: any) {
-      setServerError(err.response?.data?.message || "Invalid email or password.");
+      setServerError(
+        err.response?.data?.message || "Invalid email or password.",
+      );
     }
   };
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="w-full max-w-md pt-10 mx-auto">
+      {/* <div className="w-full max-w-md pt-10 mx-auto">
         <Link
           to="/home"
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -63,7 +67,7 @@ export default function SignInForm() {
           <ChevronLeftIcon className="size-5" />
           Back to dashboard
         </Link>
-      </div>
+      </div> */}
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
           <div className="mb-5 sm:mb-8">
@@ -78,7 +82,9 @@ export default function SignInForm() {
             {/* Server error banner */}
             {serverError && (
               <div className="mb-5 px-4 py-3 rounded-lg bg-error-50 border border-error-200 dark:bg-error-500/10 dark:border-error-500/20">
-                <p className="text-sm text-error-600 dark:text-error-400">{serverError}</p>
+                <p className="text-sm text-error-600 dark:text-error-400">
+                  {serverError}
+                </p>
               </div>
             )}
 
@@ -95,11 +101,14 @@ export default function SignInForm() {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+                      if (errors.email)
+                        setErrors((prev) => ({ ...prev, email: "" }));
                     }}
                   />
                   {errors.email && (
-                    <p className="mt-1.5 text-xs text-error-500">{errors.email}</p>
+                    <p className="mt-1.5 text-xs text-error-500">
+                      {errors.email}
+                    </p>
                   )}
                 </div>
 
@@ -115,7 +124,8 @@ export default function SignInForm() {
                       value={password}
                       onChange={(e) => {
                         setPassword(e.target.value);
-                        if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
+                        if (errors.password)
+                          setErrors((prev) => ({ ...prev, password: "" }));
                       }}
                     />
                     <span
@@ -130,7 +140,9 @@ export default function SignInForm() {
                     </span>
                   </div>
                   {errors.password && (
-                    <p className="mt-1.5 text-xs text-error-500">{errors.password}</p>
+                    <p className="mt-1.5 text-xs text-error-500">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
 
@@ -155,11 +167,18 @@ export default function SignInForm() {
                   <Button className="w-full" size="sm" disabled={loading}>
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
-                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                        <svg
+                          className="w-4 h-4 animate-spin"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
                           <circle
                             className="opacity-25"
-                            cx="12" cy="12" r="10"
-                            stroke="currentColor" strokeWidth="4"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
                           />
                           <path
                             className="opacity-75"
@@ -192,4 +211,5 @@ export default function SignInForm() {
         </div>
       </div>
     </div>
-  )};
+  );
+}
