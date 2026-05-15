@@ -18,6 +18,8 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
+import Users from "./pages/Users/Users";
+import Roles from "./pages/Roles/Roles";
 // @ts-ignore
 import { AuthProvider } from "./context/AuthContext";
 // @ts-ignore
@@ -46,6 +48,8 @@ export default function App() {
               }
             >
               <Route path="/home" element={<Home />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/roles" element={<Roles />} />
 
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
