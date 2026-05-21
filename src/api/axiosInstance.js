@@ -6,6 +6,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 5000,
 });
 
 // ── Request Interceptor ────────────────────────────────────────────────────
@@ -18,7 +19,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // ── Response Interceptor ───────────────────────────────────────────────────
@@ -33,7 +34,7 @@ axiosInstance.interceptors.response.use(
       window.location.href = "/signin";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

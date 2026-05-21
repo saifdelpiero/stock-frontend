@@ -7,7 +7,7 @@ export default function SignIn() {
     <>
       <PageMeta
         title="Stok Management System - Sign In"
-        description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        description="Stock Management System - Sign In Page"
       />
       <AuthLayout>
         <SignInForm />

@@ -19,6 +19,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Users from "./pages/Users/Users";
+import CreateUser from "./pages/Users/CreateUser";
 import Roles from "./pages/Roles/Roles";
 // @ts-ignore
 import { AuthProvider } from "./context/AuthContext";
@@ -50,6 +51,8 @@ export default function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/users" element={<Users />} />
               <Route path="/roles" element={<Roles />} />
+              <Route path="/create-user" element={<CreateUser />} />
+              <Route path="/update-user/:id" element={<CreateUser />} />
 
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
