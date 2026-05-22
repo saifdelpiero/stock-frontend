@@ -1,5 +1,4 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import ComponentCard from "../../components/common/ComponentCard";
 import PageMeta from "../../components/common/PageMeta";
 import { useEffect, useState } from "react";
 import Button from "../../components/ui/button/Button";
@@ -11,6 +10,7 @@ import {
 } from "../../services/userService";
 import { Modal } from "../../components/ui/modal";
 import { Link } from "react-router";
+import "./users.css";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -20,8 +20,6 @@ export default function Users() {
   const [usersData, setUsersData] = useState<UserData>();
   const [selectedUser, setSelectedUser] = useState<User>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const button = <Button size="sm"> Add User </Button>;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -34,6 +32,7 @@ export default function Users() {
         setStatus("success");
       })
       .catch((err: any) => {
+        console.log("Error fetching users:", err);
         if (!controller.signal.aborted) {
           setError(err.message);
           setStatus("error");
@@ -44,31 +43,31 @@ export default function Users() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    await userService.remove(id);
+    try {
+      setStatus("loading");
+      await userService.remove(id);
 
-    const data = usersData?.users.data.filter((u) => u.id !== id);
-    const newUsersData = {
-      success: usersData!.success,
-      users: {
-        ...usersData!.users,
-        data: data!,
-      },
-    };
-    setUsersData(newUsersData);
-    setIsOpen(false);
+      const data = usersData?.users.data.filter((u) => u.id !== id);
+      const newUsersData = {
+        success: usersData!.success,
+        users: {
+          ...usersData!.users,
+          data: data!,
+        },
+      };
+      setUsersData(newUsersData);
+      setIsOpen(false);
+      setStatus("success");
+    } catch (error) {
+      setError("Failed to delete user.");
+      setStatus("error");
+    }
   };
 
   const handleDeletePopup = (user: User) => {
     setSelectedUser(user);
     setIsOpen(true);
   };
-
-  // const handleEdit = async (id: number, data: Partial<User>) => {
-  //   const updated = await userService.update(id, data);
-  //   setUsers((prev) =>
-  //     prev?.users.data.map((u) => (u.id === id ? updated : u)),
-  //   );
-  // };
 
   if (isOpen) {
     return (
@@ -108,6 +107,70 @@ export default function Users() {
           </button>
         </div>
       </Modal>
+    );
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="flex  justify-center h-screen">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="">
+        {/* <div
+          className="flex items-start sm:items-center p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft"
+          role="alert"
+        >
+          <svg
+            className="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+          <p>
+            <span className="font-medium me-1">Danger alert!</span> Change a few
+            things up and try submitting again.
+          </p>
+        </div> */}
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Holy smokes!</strong>
+          <span className="block sm:inline">
+            {error || "Something went wrong while fetching users."}
+          </span>
+          <span
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => setError(null)}
+          >
+            <svg
+              className="fill-current h-6 w-6 text-red-500"
+              role="button"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <title>Close</title>
+              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+            </svg>
+          </span>
+        </div>
+      </div>
     );
   }
 
@@ -155,6 +218,9 @@ export default function Users() {
                       Email
                     </th>
                     <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                      Role
+                    </th>
+                    <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                       Enabled
                     </th>
                     <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
@@ -178,6 +244,9 @@ export default function Users() {
                         {user["email"]}
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                        {user["Role"]?.name}
+                      </td>
+                      <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                         <Badge
                           size="sm"
                           color={
@@ -188,24 +257,21 @@ export default function Users() {
                         </Badge>
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        <button
-                          style={{ fontSize: "20px", color: "green" }}
-                          className="mx-1"
-                        >
-                          <i className="bi bi-pencil-square"></i>
-                        </button>
+                        <Link to={`/update-user/${user.id}`}>
+                          <button
+                            style={{ fontSize: "20px", color: "green" }}
+                            className="mx-1"
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+                        </Link>
+
                         <button
                           style={{ fontSize: "20px", color: "red" }}
                           className="mx-1"
                           onClick={() => handleDeletePopup(user)}
                         >
                           <i className="bi bi-trash"></i>
-                        </button>
-                        <button
-                          style={{ fontSize: "20px", color: "blue" }}
-                          className="mx-1"
-                        >
-                          <i className="bi bi-eye"></i>
                         </button>
                       </td>
                     </tr>
