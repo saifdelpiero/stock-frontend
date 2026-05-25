@@ -32,7 +32,6 @@ export default function Users() {
         setStatus("success");
       })
       .catch((err: any) => {
-        console.log("Error fetching users:", err);
         if (!controller.signal.aborted) {
           setError(err.message);
           setStatus("error");
@@ -121,37 +120,11 @@ export default function Users() {
   if (error) {
     return (
       <div className="">
-        {/* <div
-          className="flex items-start sm:items-center p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft"
-          role="alert"
-        >
-          <svg
-            className="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
-          <p>
-            <span className="font-medium me-1">Danger alert!</span> Change a few
-            things up and try submitting again.
-          </p>
-        </div> */}
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
           role="alert"
         >
-          <strong className="font-bold">Holy smokes!</strong>
+          <strong className="font-bold">Error: </strong>
           <span className="block sm:inline">
             {error || "Something went wrong while fetching users."}
           </span>
@@ -193,7 +166,7 @@ export default function Users() {
               </h3>
               <Link to="/create-user">
                 <Button>
-                  <i className="bi bi-person-plus"></i> Add User{" "}
+                  <i className="bi bi-person-plus"></i> Add User
                 </Button>
               </Link>
             </div>
