@@ -2,16 +2,22 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import ComponentCard from "../../components/common/ComponentCard";
 import Label from "../../components/form/Label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateRoleDto, roleService } from "../../services/role.service";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import {
+  permissionService,
+  PermissionData,
+} from "../../services/permission.service";
+import Checkbox from "../../components/form/input/Checkbox";
 
 const createRoleSchema = z.object({
   name: z.string().min(2).max(100),
   description: z.string().min(2).max(100),
+  permissionIds: z.array(z.number()).optional(),
 });
 
 export default function CreateRole() {
@@ -19,19 +25,43 @@ export default function CreateRole() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [error, setError] = useState<any>(null);
-  const navigate = useNavigate();
+  const [permissions, setPermissions] = useState<PermissionData | null>(null);
+  const [isChecked, setIsChecked] = useState(false);
 
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setValues,
+    getValues,
     formState: { errors },
   } = useForm<CreateRoleDto>({
     resolver: zodResolver(createRoleSchema),
     defaultValues: {
       name: "",
       description: "",
+      permissionIds: [],
     },
   });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setStatus("loading");
+    permissionService
+      .getAll()
+      .then((data) => {
+        setPermissions(data);
+        console.log("Permissions data:", data);
+        setStatus("success");
+      })
+      .catch((err) => {
+        if (!controller.signal.aborted) {
+          setError(err.message);
+          setStatus("error");
+        }
+      });
+    return () => controller.abort();
+  }, []);
 
   const handleCreateRole = async (formFata: CreateRoleDto) => {
     setStatus("loading");
@@ -43,6 +73,25 @@ export default function CreateRole() {
       console.error("Error creating role:", error);
       setStatus("error");
     }
+  };
+
+  const setPermissionValues = (permissionId: number, checked: boolean) => {
+    setValues((prevValues) => {
+      const permissions = prevValues.permissionIds || [];
+      if (checked) {
+        return {
+          ...prevValues,
+          permissionIds: [...permissions, permissionId],
+        };
+      } else {
+        return {
+          ...prevValues,
+          permissionIds: permissions.filter(
+            (id: number) => id !== permissionId,
+          ),
+        };
+      }
+    });
   };
 
   let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30`;
@@ -124,6 +173,46 @@ export default function CreateRole() {
                   />
                 </div>
               </div>
+
+              <div>
+                <Label htmlFor="permissions">Permissions</Label>
+                {permissions?.groups && permissions.groups.length > 0 ? (
+                  permissions.groups.map((group) => (
+                    <div key={group.id} className="mb-4">
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                        {group.name}
+                      </h3>
+                      <div className="mt-2 space-y-2">
+                        {group.Permissions.map((permission) => (
+                          <div
+                            key={permission.id}
+                            className="flex items-center gap-3"
+                          >
+                            <Checkbox
+                              checked={
+                                getValues("permissionIds")?.includes(
+                                  permission.id,
+                                ) || false
+                              }
+                              onChange={(checked) => {
+                                setPermissionValues(permission.id, checked);
+                              }}
+                            />
+                            <span className="block text-sm text-gray-700 dark:text-gray-400">
+                              {permission.name}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    No permissions available.
+                  </p>
+                )}
+              </div>
+              <div></div>
 
               <div>
                 <button

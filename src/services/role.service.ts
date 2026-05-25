@@ -12,6 +12,7 @@ export type Role = {
 export type CreateRoleDto = {
   name: string;
   description: string;
+  permissionIds?: number[];
 };
 
 export type RoleData = {

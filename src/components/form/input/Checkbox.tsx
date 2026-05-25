@@ -1,4 +1,5 @@
 import type React from "react";
+import { useEffect, useState } from "react";
 
 interface CheckboxProps {
   label?: string;
@@ -17,6 +18,11 @@ const Checkbox: React.FC<CheckboxProps> = ({
   className = "",
   disabled = false,
 }) => {
+  const [isChecked, setIsChecked] = useState(checked);
+
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
   return (
     <label
       className={`flex items-center space-x-3 group cursor-pointer ${
@@ -29,11 +35,14 @@ const Checkbox: React.FC<CheckboxProps> = ({
           type="checkbox"
           className={`w-5 h-5 appearance-none cursor-pointer dark:border-gray-700 border border-gray-300 checked:border-transparent rounded-md checked:bg-brand-500 disabled:opacity-60 
           ${className}`}
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          checked={isChecked}
+          onChange={(e) => {
+            setIsChecked(e.target.checked);
+            onChange(e.target.checked);
+          }}
           disabled={disabled}
         />
-        {checked && (
+        {isChecked && (
           <svg
             className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2"
             xmlns="http://www.w3.org/2000/svg"
