@@ -7,7 +7,7 @@ import Select from "../../components/form/Select";
 import { useEffect, useState } from "react";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Switch from "../../components/form/switch/Switch";
-import { userService } from "../../services/userService";
+import { User, userService } from "../../services/userService";
 import { RoleData, roleService } from "../../services/role.service";
 import { useNavigate } from "react-router";
 
@@ -23,7 +23,6 @@ export default function CreateUser() {
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
-
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
@@ -163,6 +162,7 @@ export default function CreateUser() {
                       label: r.name,
                     })) || []
                   }
+                  defaultValue={role}
                   placeholder="Select role"
                   onChange={handleSelectChange}
                   className="dark:bg-dark-900"

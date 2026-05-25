@@ -25,6 +25,8 @@ export type CreateUserDto = {
   isEnabled: boolean;
 };
 
+export type UpdateUserDto = Omit<CreateUserDto, "password">;
+
 export type UserData = {
   success: boolean;
   users: {
@@ -37,6 +39,10 @@ export type UserData = {
 
 export const userService = {
   getAll: () => axiosInstance.get<UserData>("/users").then((r) => r.data),
+  getById: (id: number) =>
+    axiosInstance
+      .get<{ success: boolean; user: User }>(`/users/${id}`)
+      .then((r) => r.data),
   update: (id: number, data: Partial<CreateUserDto>) =>
     axiosInstance.put<User>(`/users/${id}`, data).then((r) => r.data),
   remove: (id: number) => axiosInstance.delete(`/users/${id}`),
