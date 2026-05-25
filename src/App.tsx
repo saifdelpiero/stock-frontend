@@ -26,6 +26,8 @@ import { AuthProvider } from "./context/AuthContext";
 // @ts-ignore
 import PrivateRoute from "./components/PrivateRoute";
 import EditUser from "./pages/Users/EditUser";
+import CreateRole from "./pages/Roles/CreateRole";
+import EditRole from "./pages/Roles/EditRole";
 
 export default function App() {
   return (
@@ -54,7 +56,8 @@ export default function App() {
               <Route path="/roles" element={<Roles />} />
               <Route path="/create-user" element={<CreateUser />} />
               <Route path="/update-user/:id" element={<EditUser />} />
-
+              <Route path="/create-role" element={<CreateRole />} />
+              <Route path="/update-role/:id" element={<EditRole />} />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
               <Route path="/calendar" element={<Calendar />} />

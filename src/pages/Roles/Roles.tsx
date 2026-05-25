@@ -2,7 +2,6 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import { useEffect, useState } from "react";
 import Button from "../../components/ui/button/Button";
-import Badge from "../../components/ui/badge/Badge";
 import {
   roleService,
   type RoleData,
