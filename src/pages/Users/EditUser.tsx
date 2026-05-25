@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Switch from "../../components/form/switch/Switch";
-import { User, userService, UpdateUserDto } from "../../services/userService";
+import { User, userService, UpdateUserDto } from "../../services/user.service";
 import { RoleData, roleService } from "../../services/role.service";
 import { useNavigate, useParams } from "react-router";
 import PageMeta from "../../components/common/PageMeta";
@@ -244,18 +244,6 @@ export default function EditUser() {
                       </option>
                     ))}
                 </select>
-                {/* <Select
-                  options={
-                    roles?.roles.map((r) => ({
-                      value: r.id.toString(),
-                      label: r.name,
-                    })) || []
-                  }
-                  defaultValue={role}
-                  placeholder="Select role"
-                  onChange={handleSelectChange}
-                  className="dark:bg-dark-900"
-                /> */}
               </div>
 
               <div>

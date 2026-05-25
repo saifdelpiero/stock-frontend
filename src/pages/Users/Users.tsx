@@ -7,7 +7,7 @@ import {
   userService,
   type UserData,
   type User,
-} from "../../services/userService";
+} from "../../services/user.service";
 import { Modal } from "../../components/ui/modal";
 import { Link } from "react-router";
 import "./users.css";
