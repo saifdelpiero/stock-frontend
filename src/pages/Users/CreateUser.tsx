@@ -50,7 +50,6 @@ export default function CreateUser() {
 
   useEffect(() => {
     const controller = new AbortController();
-
     roleService
       .getAll()
       .then((data: RoleData) => {

@@ -26,7 +26,6 @@ export default function CreateRole() {
   >("idle");
   const [error, setError] = useState<any>(null);
   const [permissions, setPermissions] = useState<PermissionData | null>(null);
-  const [isChecked, setIsChecked] = useState(false);
 
   const navigate = useNavigate();
   const {

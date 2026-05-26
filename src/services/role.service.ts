@@ -1,5 +1,15 @@
 import axiosInstance from "../api/axiosInstance";
 
+export type Permission = {
+  id: number;
+  name: string;
+  key: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  PermissionGroupId: number;
+};
+
 export type Role = {
   id: number;
   name: string;
@@ -7,6 +17,7 @@ export type Role = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
+  Permissions: Permission[];
 };
 
 export type CreateRoleDto = {
