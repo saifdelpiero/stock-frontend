@@ -18,6 +18,12 @@ export const login = async (email, password) => {
   return response.data;
 };
 
+export const clearAuthData = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("permissions");
+};
+
 // ── Logout ─────────────────────────────────────────────────────────────────
 // Clears everything saved in localStorage
 export const logout = () => {

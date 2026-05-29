@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
+import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 // @ts-ignore
 import { useAuth } from "../../context/AuthContext";
+// @ts-ignore
+import { clearAuthData } from "../../services/auth.service";
 
 export default function SignInForm() {
   const { login, loading } = useAuth();
@@ -20,6 +22,10 @@ export default function SignInForm() {
     {},
   );
   const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    clearAuthData();
+  }, []);
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};

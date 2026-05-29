@@ -4,7 +4,7 @@ import {
   login as loginService,
   logout as logoutService,
   isAuthenticated,
-} from "../services/authService";
+} from "../services/auth.service";
 
 const AuthContext = createContext(null);
 
@@ -15,10 +15,10 @@ export const AuthProvider = ({ children }) => {
 
   // Restore user and permissions from localStorage on page refresh
   const [currentUser, setCurrentUser] = useState(
-    () => JSON.parse(localStorage.getItem("user")) || null
+    () => JSON.parse(localStorage.getItem("user")) || null,
   );
   const [permissions, setPermissions] = useState(
-    () => JSON.parse(localStorage.getItem("permissions")) || []
+    () => JSON.parse(localStorage.getItem("permissions")) || [],
   );
 
   const [authError, setAuthError] = useState(null);
@@ -36,8 +36,7 @@ export const AuthProvider = ({ children }) => {
       return data;
     } catch (err) {
       const message =
-        err.response?.data?.message ||
-        "Invalid email or password.";
+        err.response?.data?.message || "Invalid email or password.";
       setAuthError(message);
       throw err;
     } finally {
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   // Usage: hasPermission("create_user") → true / false
   const hasPermission = useCallback(
     (permission) => permissions.includes(permission),
-    [permissions]
+    [permissions],
   );
 
   return (
