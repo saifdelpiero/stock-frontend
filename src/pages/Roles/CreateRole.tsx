@@ -211,7 +211,6 @@ export default function CreateRole() {
                   </p>
                 )}
               </div>
-              <div></div>
 
               <div>
                 <button
