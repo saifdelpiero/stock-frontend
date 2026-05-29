@@ -28,6 +28,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import EditUser from "./pages/Users/EditUser";
 import CreateRole from "./pages/Roles/CreateRole";
 import EditRole from "./pages/Roles/EditRole";
+import Suppliers from "./pages/Suppliers/Suppliers";
 
 export default function App() {
   return (
@@ -58,7 +59,7 @@ export default function App() {
               <Route path="/update-user/:id" element={<EditUser />} />
               <Route path="/create-role" element={<CreateRole />} />
               <Route path="/update-role/:id" element={<EditRole />} />
-
+              <Route path="/suppliers" element={<Suppliers />} />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
               <Route path="/calendar" element={<Calendar />} />

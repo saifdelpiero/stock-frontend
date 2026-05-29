@@ -163,7 +163,7 @@ export default function Roles() {
               </h3>
               <Link to="/create-role">
                 <Button>
-                  <i className="bi bi-person-plus"></i> Add Role
+                  <i className="bi bi-plus-circle"></i> Add Role
                 </Button>
               </Link>
             </div>
