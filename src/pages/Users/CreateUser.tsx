@@ -29,9 +29,7 @@ const createUserSchema = z.object({
     .trim()
     .min(8, "Password must be at least 8 characters")
     .max(100),
-  RoleId: z.coerce
-    .number<number | "">("Role is required")
-    .positive("Role must be a positive number"),
+  RoleId: z.coerce.number<number | "">().positive("Please select a valid role"),
   isEnabled: z.boolean(),
 });
 
