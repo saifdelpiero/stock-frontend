@@ -16,7 +16,9 @@ const userSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
   email: z.email("Invalid email address"),
-  RoleId: z.number().int("Role ID must be an integer"),
+  RoleId: z.coerce
+    .number<number | "">()
+    .positive("Role must be a positive number"),
   isEnabled: z.boolean(),
 });
 
@@ -40,7 +42,7 @@ export default function EditUser() {
       firstName: "",
       lastName: "",
       email: "",
-      RoleId: 0,
+      RoleId: "",
       isEnabled: false,
     },
   });

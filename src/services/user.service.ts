@@ -9,7 +9,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
-  RoleId: number;
+  RoleId: number; // Allow both number and string for RoleId
   Role: {
     id: number;
     name: string;
@@ -21,7 +21,7 @@ export type CreateUserDto = {
   lastName: string;
   email: string;
   password: string;
-  RoleId: number;
+  RoleId: number | ""; // Allow both number and string for RoleId
   isEnabled: boolean;
 };
 

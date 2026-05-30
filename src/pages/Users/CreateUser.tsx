@@ -13,11 +13,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 const createUserSchema = z.object({
-  firstName: z.string().min(2).max(100),
-  lastName: z.string().min(2).max(100),
-  email: z.email(),
-  password: z.string().min(8).max(100),
-  RoleId: z.number().int(),
+  firstName: z
+    .string()
+    .trim()
+    .min(2, "First name is required and must be at least 2 characters")
+    .max(100),
+  lastName: z
+    .string()
+    .trim()
+    .min(2, "Last name is required and must be at least 2 characters")
+    .max(100),
+  email: z.email("Invalid email address"),
+  password: z
+    .string()
+    .trim()
+    .min(8, "Password must be at least 8 characters")
+    .max(100),
+  RoleId: z.coerce
+    .number<number | "">("Role is required")
+    .positive("Role must be a positive number"),
   isEnabled: z.boolean(),
 });
 
@@ -43,8 +57,8 @@ export default function CreateUser() {
       lastName: "",
       email: "",
       password: "",
-      RoleId: 0,
       isEnabled: false,
+      RoleId: "", // Initialize as empty string and coerce to number
     },
   });
 
@@ -57,10 +71,12 @@ export default function CreateUser() {
         setStatus("success");
       })
       .catch((err: any) => {
-        console.log("Error fetching users:", err);
         if (!controller.signal.aborted) {
-          setError(err.message);
           setStatus("error");
+          setError(err.message || "Something went wrong");
+          setTimeout(() => {
+            setError(null);
+          }, 3000);
         }
       });
 
@@ -73,9 +89,15 @@ export default function CreateUser() {
       await userService.create(formFata);
       setStatus("success");
       navigate("/users");
-    } catch (error) {
-      console.error("Error creating user:", error);
+    } catch (error: any) {
       setStatus("error");
+      setError(
+        error?.["response"]?.["data"]?.["error"] ||
+          "An error occurred while creating the user.",
+      );
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
     }
   };
 
@@ -90,35 +112,35 @@ export default function CreateUser() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="">
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-          role="alert"
-        >
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">
-            {error || "Something went wrong while fetching users."}
-          </span>
-          <span
-            className="absolute top-0 bottom-0 right-0 px-4 py-3"
-            onClick={() => setError(null)}
-          >
-            <svg
-              className="fill-current h-6 w-6 text-red-500"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </span>
-        </div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="">
+  //       <div
+  //         className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+  //         role="alert"
+  //       >
+  //         <strong className="font-bold">Error: </strong>
+  //         <span className="block sm:inline">
+  //           {error || "Something went wrong while fetching users."}
+  //         </span>
+  //         <span
+  //           className="absolute top-0 bottom-0 right-0 px-4 py-3"
+  //           onClick={() => setError(null)}
+  //         >
+  //           <svg
+  //             className="fill-current h-6 w-6 text-red-500"
+  //             role="button"
+  //             xmlns="http://www.w3.org/2000/svg"
+  //             viewBox="0 0 20 20"
+  //           >
+  //             <title>Close</title>
+  //             <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+  //           </svg>
+  //         </span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -130,7 +152,33 @@ export default function CreateUser() {
       <div className="grid grid-cols-1 gap-6 ">
         <div className="space-y-6">
           <ComponentCard title="Create User">
+            {error && (
+              <div className="">
+                <div
+                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                  role="alert"
+                >
+                  <strong className="font-bold">Error: </strong>
+                  <span className="block sm:inline">{error}</span>
+                  <span
+                    className="absolute top-0 bottom-0 right-0 px-4 py-3"
+                    onClick={() => setError(null)}
+                  >
+                    <svg
+                      className="fill-current h-6 w-6 text-red-500"
+                      role="button"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <title>Close</title>
+                      <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            )}
             <form
+              autoComplete="off"
               className="space-y-6"
               onSubmit={handleSubmit(handleCreateUser)}
             >
@@ -144,6 +192,11 @@ export default function CreateUser() {
                     {...register("firstName")}
                     placeholder="Enter your first name"
                   />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.firstName.message}
+                    </p>
+                  )}
                 </div>
               </div>
               <div>
@@ -156,6 +209,11 @@ export default function CreateUser() {
                     {...register("lastName")}
                     placeholder="Enter your last name"
                   />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.lastName.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -169,6 +227,11 @@ export default function CreateUser() {
                     {...register("email")}
                     placeholder="Enter your email"
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -178,10 +241,16 @@ export default function CreateUser() {
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
+                    autoComplete="new-password"
                     className={inputClasses}
                     {...register("password")}
                     placeholder="Enter your password"
                   />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -210,6 +279,7 @@ export default function CreateUser() {
                   <option
                     value=""
                     disabled
+                    hidden
                     className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
                     Select an option
@@ -226,12 +296,17 @@ export default function CreateUser() {
                       </option>
                     ))}
                 </select>
+                {errors.RoleId && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.RoleId.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <Label>Enabled</Label>
                 <Switch
-                  label="Default"
+                  label=""
                   onChange={(checked) => {
                     setValue("isEnabled", checked);
                   }}
@@ -242,7 +317,7 @@ export default function CreateUser() {
               <div>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700  dark:text-gray-400"
                 >
                   Create User
                 </button>

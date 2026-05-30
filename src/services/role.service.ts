@@ -1,14 +1,5 @@
 import axiosInstance from "../api/axiosInstance";
-
-export type Permission = {
-  id: number;
-  name: string;
-  key: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  PermissionGroupId: number;
-};
+import { Permission } from "./permission.service";
 
 export type Role = {
   id: number;

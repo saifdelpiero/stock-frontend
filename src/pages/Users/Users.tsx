@@ -231,16 +231,13 @@ export default function Users() {
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                         <Link to={`/update-user/${user.id}`}>
-                          <button
-                            style={{ fontSize: "20px", color: "green" }}
-                            className="mx-1"
-                          >
+                          <button style={{ fontSize: "20px" }} className="mx-1">
                             <i className="bi bi-pencil-square"></i>
                           </button>
                         </Link>
 
                         <button
-                          style={{ fontSize: "20px", color: "red" }}
+                          style={{ fontSize: "20px" }}
                           className="mx-1"
                           onClick={() => handleDeletePopup(user)}
                         >
