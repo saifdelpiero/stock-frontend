@@ -169,62 +169,65 @@ export default function Roles() {
             </div>
           </div>
 
-          {/* Card Body */}
-          <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-            <div className="space-y-6">
-              <table className="min-w-full">
-                <thead className="border-b border-gray-100 dark:border-white/[0.05]">
-                  <tr>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                      id
-                    </th>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                      Name
-                    </th>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                      Description
-                    </th>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                  {rolesData?.roles.map((role, index) => (
-                    <tr key={role.id}>
-                      <td className="px-5 py-4 text-gray-500 sm:px-6 text-start dark:text-gray-400">
-                        {index + 1}
-                      </td>
-                      <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {role.name}
-                      </td>
-                      <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {role.description}
-                      </td>
-                      <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        <Link to={`/update-role/${role.id}`}>
-                          <button
-                            style={{ fontSize: "20px", color: "green" }}
-                            className="mx-1"
-                          >
-                            <i className="bi bi-pencil-square"></i>
-                          </button>
-                        </Link>
-
-                        <button
-                          style={{ fontSize: "20px", color: "red" }}
-                          className="mx-1"
-                          onClick={() => handleDeletePopup(role)}
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
+          {rolesData?.roles && rolesData?.roles?.length > 0 ? (
+            <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+              <div className="space-y-6">
+                <table className="min-w-full">
+                  <thead className="border-b border-gray-100 dark:border-white/[0.05]">
+                    <tr>
+                      <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                        id
+                      </th>
+                      <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                        Name
+                      </th>
+                      <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                        Description
+                      </th>
+                      <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                    {rolesData?.roles.map((role, index) => (
+                      <tr key={role.id}>
+                        <td className="px-5 py-4 text-gray-500 sm:px-6 text-start dark:text-gray-400">
+                          {index + 1}
+                        </td>
+                        <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                          {role.name}
+                        </td>
+                        <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                          {role.description}
+                        </td>
+                        <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                          <Link to={`/update-role/${role.id}`}>
+                            <button
+                              style={{ fontSize: "20px", color: "green" }}
+                              className="mx-1"
+                            >
+                              <i className="bi bi-pencil-square"></i>
+                            </button>
+                          </Link>
+
+                          <button
+                            style={{ fontSize: "20px", color: "red" }}
+                            className="mx-1"
+                            onClick={() => handleDeletePopup(role)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ) : (
+            <p>No roles found.</p>
+          )}
         </div>
       </div>
     </>
