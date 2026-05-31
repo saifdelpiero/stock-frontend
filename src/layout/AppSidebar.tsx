@@ -53,7 +53,10 @@ const navItems: NavItem[] = [
   {
     name: "Stock Management",
     icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
+    subItems: [
+      { name: "Warehouse", path: "/warehouses", pro: false },
+      { name: "Modem", path: "/basic-tables", pro: false },
+    ],
   },
   // {
   //   name: "Stock History",

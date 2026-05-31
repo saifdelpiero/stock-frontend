@@ -3,7 +3,7 @@ import axiosInstance from "../api/axiosInstance";
 export type Warehouse = {
   id: number;
   name: string;
-  adress: string;
+  address: string;
   type: string;
   min_stock: number;
   createdAt: string;
@@ -13,7 +13,7 @@ export type Warehouse = {
 
 export type CreateWarehouseDto = {
   name: string;
-  adress: string;
+  address: string;
   type: string;
   min_stock: number;
 };
@@ -29,10 +29,12 @@ export type WarehouseData = {
 };
 
 export const warehouseService = {
-  getAll: () => axiosInstance.get("/warehouses"),
-  getById: (id: number) => axiosInstance.get(`/warehouses/${id}`),
+  getAll: () => axiosInstance.get("/warehouses").then((r) => r.data),
+  getById: (id: number) =>
+    axiosInstance.get(`/warehouses/${id}`).then((r) => r.data),
   update: (id: number, data: CreateWarehouseDto) =>
-    axiosInstance.put(`/warehouses/${id}`, data),
+    axiosInstance.put(`/warehouses/${id}`, data).then((r) => r.data),
   remove: (id: number) => axiosInstance.delete(`/warehouses/${id}`),
-  create: (data: CreateWarehouseDto) => axiosInstance.post("/warehouses", data),
+  create: (data: CreateWarehouseDto) =>
+    axiosInstance.post("/warehouses", data).then((r) => r.data),
 };

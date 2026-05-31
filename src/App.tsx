@@ -31,6 +31,9 @@ import EditRole from "./pages/Roles/EditRole";
 import Suppliers from "./pages/Suppliers/Suppliers";
 import CreateSupplier from "./pages/Suppliers/CreateSupplier";
 import EditSupplier from "./pages/Suppliers/EditSupplier";
+import Warehouses from "./pages/Warehouses/Warehouses";
+import CreateWarehouse from "./pages/Warehouses/CreateWarehouse";
+import EditWarehouse from "./pages/Warehouses/EditWarehouse";
 
 export default function App() {
   return (
@@ -64,6 +67,9 @@ export default function App() {
               <Route path="/suppliers" element={<Suppliers />} />
               <Route path="/create-supplier" element={<CreateSupplier />} />
               <Route path="/update-supplier/:id" element={<EditSupplier />} />
+              <Route path="/warehouses" element={<Warehouses />} />
+              <Route path="/create-warehouse" element={<CreateWarehouse />} />
+              <Route path="/update-warehouse/:id" element={<EditWarehouse />} />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
               <Route path="/calendar" element={<Calendar />} />
