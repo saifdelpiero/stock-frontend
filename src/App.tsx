@@ -29,6 +29,8 @@ import EditUser from "./pages/Users/EditUser";
 import CreateRole from "./pages/Roles/CreateRole";
 import EditRole from "./pages/Roles/EditRole";
 import Suppliers from "./pages/Suppliers/Suppliers";
+import CreateSupplier from "./pages/Suppliers/CreateSupplier";
+import EditSupplier from "./pages/Suppliers/EditSupplier";
 
 export default function App() {
   return (
@@ -60,6 +62,8 @@ export default function App() {
               <Route path="/create-role" element={<CreateRole />} />
               <Route path="/update-role/:id" element={<EditRole />} />
               <Route path="/suppliers" element={<Suppliers />} />
+              <Route path="/create-supplier" element={<CreateSupplier />} />
+              <Route path="/update-supplier/:id" element={<EditSupplier />} />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
               <Route path="/calendar" element={<Calendar />} />
