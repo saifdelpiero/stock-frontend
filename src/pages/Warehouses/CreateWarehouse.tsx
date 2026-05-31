@@ -8,26 +8,27 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
-  CreateSupplierDto,
-  supplierService,
-} from "../../services/supplier.service";
+  CreateWarehouseDto,
+  warehouseService,
+} from "../../services/warehouse.service";
 
-const createSupplierSchema = z.object({
+const createWarehouseSchema = z.object({
   name: z
     .string()
     .trim()
     .min(2, "Name is required and must be at least 2 characters")
     .max(100),
-  phone: z
+  type: z
     .string()
     .trim()
-    .min(2, "Phone is required and must be at least 2 characters")
+    .min(2, "Type is required and must be at least 2 characters")
     .max(100),
   address: z
     .string()
     .trim()
     .min(2, "Address is required and must be at least 2 characters")
     .max(255),
+  min_stock: z.number().min(0, "Minimum stock must be a non-negative number"),
 });
 
 export default function CreateWarehouse() {
@@ -40,27 +41,29 @@ export default function CreateWarehouse() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
-  } = useForm<CreateSupplierDto>({
-    resolver: zodResolver(createSupplierSchema),
+  } = useForm<CreateWarehouseDto>({
+    resolver: zodResolver(createWarehouseSchema),
     defaultValues: {
       name: "",
-      phone: "",
+      type: "",
       address: "",
+      min_stock: 0,
     },
   });
 
-  const handleCreateSupplier = async (formFata: CreateSupplierDto) => {
+  const handleCreateWarehouse = async (formData: CreateWarehouseDto) => {
     setStatus("loading");
     try {
-      await supplierService.create(formFata);
+      await warehouseService.create(formData);
       setStatus("success");
-      navigate("/suppliers");
+      navigate("/warehouses");
     } catch (error: any) {
       setStatus("error");
       setError(
         error?.["response"]?.["data"]?.["error"] ||
-          "An error occurred while creating the supplier.",
+          "An error occurred while creating the warehouse.",
       );
       setTimeout(() => {
         setError(null);
@@ -82,13 +85,13 @@ export default function CreateWarehouse() {
   return (
     <div>
       <PageMeta
-        title="Stock Management System | Create Supplier"
-        description="Stock Management System Create Supplier Page"
+        title="Stock Management System | Create Warehouse"
+        description="Stock Management System Create Warehouse Page"
       />
-      <PageBreadcrumb pageTitle="Create Supplier" />
+      <PageBreadcrumb pageTitle="Create Warehouse" />
       <div className="grid grid-cols-1 gap-6 ">
         <div className="space-y-6">
-          <ComponentCard title="Create Supplier">
+          <ComponentCard title="Create Warehouse">
             {error && (
               <div className="">
                 <div
@@ -117,7 +120,7 @@ export default function CreateWarehouse() {
             <form
               autoComplete="off"
               className="space-y-6"
-              onSubmit={handleSubmit(handleCreateSupplier)}
+              onSubmit={handleSubmit(handleCreateWarehouse)}
             >
               <div>
                 <Label htmlFor="name">Name</Label>
@@ -127,7 +130,7 @@ export default function CreateWarehouse() {
                     id="name"
                     className={inputClasses}
                     {...register("name")}
-                    placeholder="Enter Supplier Name"
+                    placeholder="Enter Warehouse Name"
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">
@@ -137,25 +140,7 @@ export default function CreateWarehouse() {
                 </div>
               </div>
               <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="phone"
-                    className={inputClasses}
-                    {...register("phone")}
-                    placeholder="Enter Phone Number"
-                  />
-                  {errors.phone && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <Label>Address</Label>
+                <Label htmlFor="address">Address</Label>
                 <div className="relative">
                   <input
                     type="text"
@@ -173,11 +158,70 @@ export default function CreateWarehouse() {
               </div>
 
               <div>
+                <Label>Select Type</Label>
+                <select
+                  {...register("type")}
+                  className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${
+                    getValues("type")
+                      ? "text-gray-800 dark:text-white/90"
+                      : "text-gray-400 dark:text-gray-400"
+                  } dark:bg-dark-900`}
+                >
+                  {/* Placeholder option */}
+                  <option
+                    value=""
+                    disabled
+                    hidden
+                    className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Select an option
+                  </option>
+                  {/* Map over options */}
+
+                  <option
+                    value="physique"
+                    className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Physique
+                  </option>
+                  <option
+                    value="logic"
+                    className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    logic
+                  </option>
+                </select>
+                {errors.type && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.type.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label>Minimum Stock</Label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="min_stock"
+                    className={inputClasses}
+                    {...register("min_stock", { valueAsNumber: true })}
+                    placeholder="Enter Minimum Stock"
+                  />
+                  {errors.min_stock && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.min_stock.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700  dark:text-gray-400"
                 >
-                  Create Supplier
+                  Create Warehouse
                 </button>
               </div>
             </form>
