@@ -10,6 +10,17 @@ export type PurchaseOrder = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  Supplier: {
+    id: number;
+    name: string;
+    phone: string;
+    address: string;
+  };
+  User: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  };
 };
 
 export type CreatePurchaseOrderDto = {
@@ -48,5 +59,5 @@ export const purchaseOrderService = {
       .then((r) => r.data),
   remove: (id: number) => axiosInstance.delete(`/purchase-orders/${id}`),
   create: (data: CreatePurchaseOrderDto) =>
-    axiosInstance.post("/purchase-orders", data),
+    axiosInstance.post("/purchase-orders", data).then((r) => r.data),
 };
