@@ -25,7 +25,14 @@ export type PurchaseOrder = {
 
 export type CreatePurchaseOrderDto = {
   quantity_ordered: number;
-  supplier_id: number;
+  supplier_id: number | "";
+};
+
+export type UpdatePurchaseOrderDto = {
+  quantity_ordered: number;
+  quantity_received: number;
+  supplier_id: number | "";
+  status: string;
 };
 
 export type PurchaseOrderData = {

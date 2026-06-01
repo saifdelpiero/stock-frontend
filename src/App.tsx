@@ -35,6 +35,8 @@ import Warehouses from "./pages/Warehouses/Warehouses";
 import CreateWarehouse from "./pages/Warehouses/CreateWarehouse";
 import EditWarehouse from "./pages/Warehouses/EditWarehouse";
 import PurchaseOrders from "./pages/PurchaseOrder/PurchaseOrders";
+import CreatePurchaseOrder from "./pages/PurchaseOrder/CreatePurchaseOrder";
+import EditPurchaseOrder from "./pages/PurchaseOrder/EditPurchaseOrder";
 
 export default function App() {
   return (
@@ -72,6 +74,14 @@ export default function App() {
               <Route path="/create-warehouse" element={<CreateWarehouse />} />
               <Route path="/update-warehouse/:id" element={<EditWarehouse />} />
               <Route path="/purchase-orders" element={<PurchaseOrders />} />
+              <Route
+                path="/create-purchase-order"
+                element={<CreatePurchaseOrder />}
+              />
+              <Route
+                path="/update-purchase-order/:id"
+                element={<EditPurchaseOrder />}
+              />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />
               <Route path="/calendar" element={<Calendar />} />
