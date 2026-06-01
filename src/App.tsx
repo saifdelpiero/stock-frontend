@@ -37,6 +37,7 @@ import EditWarehouse from "./pages/Warehouses/EditWarehouse";
 import PurchaseOrders from "./pages/PurchaseOrder/PurchaseOrders";
 import CreatePurchaseOrder from "./pages/PurchaseOrder/CreatePurchaseOrder";
 import EditPurchaseOrder from "./pages/PurchaseOrder/EditPurchaseOrder";
+import PurchaseOrderHistory from "./pages/PurchaseOrderHistory/PurchaseOrderHistory";
 
 export default function App() {
   return (
@@ -81,6 +82,10 @@ export default function App() {
               <Route
                 path="/update-purchase-order/:id"
                 element={<EditPurchaseOrder />}
+              />
+              <Route
+                path="/purchase-order-history/:id"
+                element={<PurchaseOrderHistory />}
               />
               {/* Others Page */}
               <Route path="/profile" element={<UserProfiles />} />

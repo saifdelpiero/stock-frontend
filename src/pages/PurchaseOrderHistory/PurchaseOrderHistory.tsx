@@ -3,33 +3,40 @@ import PageMeta from "../../components/common/PageMeta";
 import { useEffect, useState } from "react";
 import Button from "../../components/ui/button/Button";
 import { Modal } from "../../components/ui/modal";
-import { Link } from "react-router";
-import "./purchase-order.css";
+import { Link, useParams } from "react-router";
+import "./purchase-order-history.css";
 import {
   PurchaseOrder,
   PurchaseOrderData,
   purchaseOrderService,
 } from "../../services/purchase-order.service";
+import {
+  PurchaseOrderHistoryData,
+  purchaseOrderHistoryService,
+} from "../../services/purchase-order-history.service";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export default function PurchaseOrders() {
+export default function PurchaseOrderHistory() {
+  const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [purchaseOrdersData, setPurchaseOrdersData] =
-    useState<PurchaseOrderData>();
-  const [selectedPurchaseOrder, setSelectedPurchaseOrder] =
-    useState<PurchaseOrder>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [purchaseOrderHistoriesData, setPurchaseOrderHistoriesData] =
+    useState<PurchaseOrderHistoryData>();
 
   useEffect(() => {
     const controller = new AbortController();
     setStatus("loading");
+    if (!id) {
+      setError("Purchase order ID is required.");
+      setStatus("error");
+      return;
+    }
 
-    purchaseOrderService
-      .getAll()
+    purchaseOrderHistoryService
+      .getByPurchaseOrderId(parseInt(id))
       .then((data: any) => {
-        setPurchaseOrdersData(data);
+        setPurchaseOrderHistoriesData(data);
         setStatus("success");
       })
       .catch((err: any) => {
@@ -42,73 +49,16 @@ export default function PurchaseOrders() {
     return () => controller.abort();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    try {
-      setStatus("loading");
-      await purchaseOrderService.remove(id);
-
-      const data = purchaseOrdersData?.purchaseOrders.data.filter(
-        (s) => s.id !== id,
-      );
-      const newPurchaseOrdersData = {
-        success: purchaseOrdersData!.success,
-        purchaseOrders: {
-          ...purchaseOrdersData!.purchaseOrders,
-          data: data!,
-        },
-      };
-      setPurchaseOrdersData(newPurchaseOrdersData);
-      setIsOpen(false);
-      setStatus("success");
-    } catch (error) {
-      setError("Failed to delete purchase order.");
-      setStatus("error");
-    }
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
-
-  const handleDeletePopup = (purchaseOrder: PurchaseOrder) => {
-    setSelectedPurchaseOrder(purchaseOrder);
-    setIsOpen(true);
-  };
-
-  if (isOpen) {
-    return (
-      <Modal
-        isOpen={isOpen}
-        isFullscreen={false}
-        onClose={() => setIsOpen(false)}
-      >
-        <p>Are you sure you want to delete purchase order?</p>
-        <div style={{ marginTop: "30px" }}>
-          <button
-            style={{
-              width: "120px",
-              height: "45px",
-              border: "1px solid gray",
-              marginRight: "10px",
-              borderRadius: "10px",
-            }}
-            onClick={() => setIsOpen(false)}
-          >
-            Cancel
-          </button>
-          <button
-            style={{
-              width: "120px",
-              height: "45px",
-              border: "none",
-              backgroundColor: "#e73215",
-              borderRadius: "10px",
-              color: "white",
-            }}
-            onClick={() => handleDelete(selectedPurchaseOrder!.id)}
-          >
-            Delete
-          </button>
-        </div>
-      </Modal>
-    );
-  }
 
   if (status === "loading") {
     return (
@@ -151,10 +101,10 @@ export default function PurchaseOrders() {
   return (
     <>
       <PageMeta
-        title="Stock Management System | Purchase Orders Page"
-        description="Stock Management System Purchase Orders Page"
+        title="Stock Management System | Purchase Order History Page"
+        description="Stock Management System Purchase Order History Page"
       />
-      <PageBreadcrumb pageTitle="Purchase Orders List" />
+      <PageBreadcrumb pageTitle="Purchase Order History" />
       <div className="space-y-6">
         <div
           className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]`}
@@ -163,18 +113,19 @@ export default function PurchaseOrders() {
           <div className="px-6 py-5">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
-                Purchase Orders
+                Purchase Order History
               </h3>
-              <Link to="/create-purchase-order">
+              {/* <Link to="/create-purchase-order">
                 <Button>
                   <i className="bi bi-plus-circle"></i>Add Purchase Order
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
 
-          {purchaseOrdersData?.purchaseOrders &&
-          purchaseOrdersData?.purchaseOrders?.data.length > 0 ? (
+          {purchaseOrderHistoriesData?.purchaseOrderHistories &&
+          purchaseOrderHistoriesData?.purchaseOrderHistories?.data.length >
+            0 ? (
             <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
               <div className="space-y-6">
                 <table className="min-w-full">
@@ -201,13 +152,10 @@ export default function PurchaseOrders() {
                       <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
                         Created At
                       </th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                        Actions
-                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                    {purchaseOrdersData?.purchaseOrders.data.map(
+                    {purchaseOrderHistoriesData?.purchaseOrderHistories.data.map(
                       (purchaseOrder, index) => (
                         <tr key={purchaseOrder.id}>
                           <td className="px-5 py-4 text-gray-500 sm:px-6 text-start dark:text-gray-400">
@@ -223,46 +171,16 @@ export default function PurchaseOrders() {
                             {purchaseOrder.status}
                           </td>
                           <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                            {purchaseOrder.Supplier?.name ?? ""}
+                            {purchaseOrder.PurchaseOrder?.Supplier.name ?? ""}
                           </td>
                           <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                             {`${purchaseOrder.User?.firstName ?? ""} ${purchaseOrder.User?.lastName ?? ""}`}
                           </td>
                           <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                            {new Date(
+                            {/* {new Date(
                               purchaseOrder.createdAt,
-                            ).toLocaleDateString()}
-                          </td>
-                          <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                            <Link
-                              to={`/update-purchase-order/${purchaseOrder.id}`}
-                            >
-                              <button
-                                style={{ fontSize: "20px" }}
-                                className="mx-1"
-                              >
-                                <i className="bi bi-pencil-square"></i>
-                              </button>
-                            </Link>
-
-                            <button
-                              style={{ fontSize: "20px" }}
-                              className="mx-1"
-                              onClick={() => handleDeletePopup(purchaseOrder)}
-                            >
-                              <i className="bi bi-trash"></i>
-                            </button>
-                            <Link
-                              to={`/purchase-order-history/${purchaseOrder.id}`}
-                            >
-                              <button
-                                type="button"
-                                style={{ fontSize: "20px" }}
-                                className="mx-1"
-                              >
-                                <i className="bi bi-eye"></i>
-                              </button>
-                            </Link>
+                            ).toLocaleDateString()} */}
+                            {formatDate(purchaseOrder.createdAt)}
                           </td>
                         </tr>
                       ),
@@ -272,7 +190,7 @@ export default function PurchaseOrders() {
               </div>
             </div>
           ) : (
-            <p className="p-4">No purchase orders found.</p>
+            <p className="p-4">No purchase order histories found.</p>
           )}
         </div>
       </div>
