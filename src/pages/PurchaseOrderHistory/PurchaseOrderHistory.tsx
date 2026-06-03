@@ -1,15 +1,8 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import { useEffect, useState } from "react";
-import Button from "../../components/ui/button/Button";
-import { Modal } from "../../components/ui/modal";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import "./purchase-order-history.css";
-import {
-  PurchaseOrder,
-  PurchaseOrderData,
-  purchaseOrderService,
-} from "../../services/purchase-order.service";
 import {
   PurchaseOrderHistoryData,
   purchaseOrderHistoryService,
@@ -115,11 +108,6 @@ export default function PurchaseOrderHistory() {
               <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
                 Purchase Order History
               </h3>
-              {/* <Link to="/create-purchase-order">
-                <Button>
-                  <i className="bi bi-plus-circle"></i>Add Purchase Order
-                </Button>
-              </Link> */}
             </div>
           </div>
 
@@ -177,9 +165,6 @@ export default function PurchaseOrderHistory() {
                             {`${purchaseOrder.User?.firstName ?? ""} ${purchaseOrder.User?.lastName ?? ""}`}
                           </td>
                           <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                            {/* {new Date(
-                              purchaseOrder.createdAt,
-                            ).toLocaleDateString()} */}
                             {formatDate(purchaseOrder.createdAt)}
                           </td>
                         </tr>
