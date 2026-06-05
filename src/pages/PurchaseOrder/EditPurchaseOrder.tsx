@@ -18,31 +18,10 @@ import {
   supplierService,
 } from "../../services/supplier.service";
 
-enum PurchaseOrderStatus {
-  Created = "created",
-  PartialDelivered = "partial delivered",
-  CompletelyDelivered = "completely delivered",
-}
-
-const PurchaseOrderStatusOptions = [
-  "created",
-  "partial delivered",
-  "completely delivered",
-] as const;
 const updatePurchaseOrderSchema = z.object({
   quantity_ordered: z
     .number()
     .min(0, "Quantity ordered is required and must be greater than 0"),
-  quantity_received: z
-    .number()
-    .min(0, "Quantity received is required and must be greater than 0"),
-  status: z.string().refine((value) => {
-    return (
-      value === PurchaseOrderStatus.Created ||
-      value === PurchaseOrderStatus.PartialDelivered ||
-      value === PurchaseOrderStatus.CompletelyDelivered
-    );
-  }, "Status is required and must be a valid option"),
   supplier_id: z.coerce
     .number<number | "">()
     .positive("Please select a valid supplier"),
@@ -62,14 +41,12 @@ export default function EditPurchaseOrder() {
     handleSubmit,
     reset,
     getValues,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<UpdatePurchaseOrderDto>({
     resolver: zodResolver(updatePurchaseOrderSchema),
     defaultValues: {
       quantity_ordered: 0,
-      quantity_received: 0,
-      status: PurchaseOrderStatus.Created,
-      supplier_id: "",
+      supplier_id: 0,
     },
   });
 
@@ -86,9 +63,6 @@ export default function EditPurchaseOrder() {
         }) => {
           reset({
             quantity_ordered: purchaseOrderData.purchaseOrder.quantity_ordered,
-            quantity_received:
-              purchaseOrderData.purchaseOrder.quantity_received,
-            status: purchaseOrderData.purchaseOrder.status,
             supplier_id: purchaseOrderData.purchaseOrder.supplier_id,
           });
           setStatus("success");
@@ -126,16 +100,14 @@ export default function EditPurchaseOrder() {
     return () => controller.abort();
   }, []);
 
-  const handleUpdatePurchaseOrder = async (
-    formData: UpdatePurchaseOrderDto,
-  ) => {
+  const handleUpdatePurchaseOrder = async (data: UpdatePurchaseOrderDto) => {
     if (!id) {
       setError("Invalid warehouse ID.");
       return;
     }
     setStatus("loading");
     try {
-      await purchaseOrderService.update(parseInt(id), formData);
+      await purchaseOrderService.update(parseInt(id), data);
       setStatus("success");
       navigate("/purchase-orders");
     } catch (error: any) {
@@ -220,62 +192,6 @@ export default function EditPurchaseOrder() {
               </div>
 
               <div>
-                <Label htmlFor="quantity_received">Quantity Received</Label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    id="quantity_received"
-                    className={inputClasses}
-                    {...register("quantity_received", { valueAsNumber: true })}
-                    placeholder="Enter Quantity Received"
-                  />
-                  {errors.quantity_received && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.quantity_received.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <Label>Select Status</Label>
-                <select
-                  {...register("status")}
-                  className={`h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${
-                    getValues("status")
-                      ? "text-gray-800 dark:text-white/90"
-                      : "text-gray-400 dark:text-gray-400"
-                  } dark:bg-dark-900`}
-                >
-                  {/* Placeholder option */}
-                  <option
-                    value=""
-                    disabled
-                    hidden
-                    className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Select an option
-                  </option>
-                  {/* Map over options */}
-
-                  {PurchaseOrderStatusOptions.map((statusOption) => (
-                    <option
-                      key={statusOption}
-                      value={statusOption}
-                      className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                    >
-                      {statusOption}
-                    </option>
-                  ))}
-                </select>
-                {errors.status && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.status.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
                 <Label>Select Supplier</Label>
                 <select
                   {...register("supplier_id")}
@@ -316,9 +232,10 @@ export default function EditPurchaseOrder() {
               <div>
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700  dark:text-gray-400"
                 >
-                  Update Purchase Order
+                  {isSubmitting ? "Updating..." : "Update Purchase Order"}
                 </button>
               </div>
             </form>

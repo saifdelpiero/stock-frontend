@@ -30,9 +30,7 @@ export type CreatePurchaseOrderDto = {
 
 export type UpdatePurchaseOrderDto = {
   quantity_ordered: number;
-  quantity_received: number;
   supplier_id: number | "";
-  status: string;
 };
 
 export type PurchaseOrderData = {
@@ -57,13 +55,14 @@ export const purchaseOrderService = {
         purchaseOrder: PurchaseOrder;
       }>(`/purchase-orders/${id}`)
       .then((r) => r.data),
-  update: (id: number, data: CreatePurchaseOrderDto) =>
-    axiosInstance
+  update: (id: number, data: UpdatePurchaseOrderDto) => {
+    return axiosInstance
       .put<{
         success: boolean;
         purchaseOrder: PurchaseOrder;
       }>(`/purchase-orders/${id}`, data)
-      .then((r) => r.data),
+      .then((r) => r.data);
+  },
   remove: (id: number) => axiosInstance.delete(`/purchase-orders/${id}`),
   create: (data: CreatePurchaseOrderDto) =>
     axiosInstance.post("/purchase-orders", data).then((r) => r.data),

@@ -253,6 +253,17 @@ export default function PurchaseOrders() {
                               <i className="bi bi-trash"></i>
                             </button>
                             <Link
+                              to={`/upload-purchase-order/${purchaseOrder.id}`}
+                            >
+                              <button
+                                type="button"
+                                style={{ fontSize: "20px" }}
+                                className="mx-1"
+                              >
+                                <i className="bi bi-cloud-arrow-up"></i>
+                              </button>
+                            </Link>
+                            <Link
                               to={`/purchase-order-history/${purchaseOrder.id}`}
                             >
                               <button
