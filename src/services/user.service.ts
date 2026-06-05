@@ -38,7 +38,12 @@ export type UserData = {
 };
 
 export const userService = {
-  getAll: () => axiosInstance.get<UserData>("/users").then((r) => r.data),
+  getAll: (page: number = 1, search: string = "") => {
+    const params = new URLSearchParams({ page: page.toString(), search });
+    return axiosInstance
+      .get<UserData>("/users", { params })
+      .then((r) => r.data);
+  },
   getById: (id: number) =>
     axiosInstance
       .get<{ success: boolean; user: User }>(`/users/${id}`)

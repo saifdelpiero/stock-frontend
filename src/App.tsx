@@ -38,6 +38,7 @@ import PurchaseOrders from "./pages/PurchaseOrder/PurchaseOrders";
 import CreatePurchaseOrder from "./pages/PurchaseOrder/CreatePurchaseOrder";
 import EditPurchaseOrder from "./pages/PurchaseOrder/EditPurchaseOrder";
 import PurchaseOrderHistory from "./pages/PurchaseOrderHistory/PurchaseOrderHistory";
+import UploadModems from "./pages/Modems/UploadModems";
 
 export default function App() {
   return (
@@ -61,46 +62,238 @@ export default function App() {
                 </PrivateRoute>
               }
             >
-              <Route path="/home" element={<Home />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/roles" element={<Roles />} />
-              <Route path="/create-user" element={<CreateUser />} />
-              <Route path="/update-user/:id" element={<EditUser />} />
-              <Route path="/create-role" element={<CreateRole />} />
-              <Route path="/update-role/:id" element={<EditRole />} />
-              <Route path="/suppliers" element={<Suppliers />} />
-              <Route path="/create-supplier" element={<CreateSupplier />} />
-              <Route path="/update-supplier/:id" element={<EditSupplier />} />
-              <Route path="/warehouses" element={<Warehouses />} />
-              <Route path="/create-warehouse" element={<CreateWarehouse />} />
-              <Route path="/update-warehouse/:id" element={<EditWarehouse />} />
-              <Route path="/purchase-orders" element={<PurchaseOrders />} />
+              <Route
+                path="/home"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Home />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/users"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Users />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/roles"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Roles />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create-user"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <CreateUser />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/update-user/:id"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <EditUser />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create-role"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <CreateRole />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/update-role/:id"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <EditRole />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/suppliers"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Suppliers />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create-supplier"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <CreateSupplier />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/update-supplier/:id"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <EditSupplier />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/warehouses"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Warehouses />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create-warehouse"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <CreateWarehouse />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/update-warehouse/:id"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <EditWarehouse />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/purchase-orders"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <PurchaseOrders />{" "}
+                  </PrivateRoute>
+                }
+              />
               <Route
                 path="/create-purchase-order"
-                element={<CreatePurchaseOrder />}
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <CreatePurchaseOrder />{" "}
+                  </PrivateRoute>
+                }
               />
               <Route
                 path="/update-purchase-order/:id"
-                element={<EditPurchaseOrder />}
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <EditPurchaseOrder />{" "}
+                  </PrivateRoute>
+                }
               />
               <Route
                 path="/purchase-order-history/:id"
-                element={<PurchaseOrderHistory />}
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <PurchaseOrderHistory />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/upload-modems/:id"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <UploadModems />{" "}
+                  </PrivateRoute>
+                }
               />
               {/* Others Page */}
-              <Route path="/profile" element={<UserProfiles />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/blank" element={<Blank />} />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <UserProfiles />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/calendar"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Calendar />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/blank"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Blank />{" "}
+                  </PrivateRoute>
+                }
+              />
 
               {/* Forms */}
-              <Route path="/form-elements" element={<FormElements />} />
+              <Route
+                path="/form-elements"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <FormElements />{" "}
+                  </PrivateRoute>
+                }
+              />
 
               {/* Tables */}
-              <Route path="/basic-tables" element={<BasicTables />} />
+              <Route
+                path="/basic-tables"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <BasicTables />{" "}
+                  </PrivateRoute>
+                }
+              />
 
               {/* Ui Elements */}
-              <Route path="/alerts" element={<Alerts />} />
-              <Route path="/avatars" element={<Avatars />} />
+              <Route
+                path="/alerts"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Alerts />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/avatars"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <Avatars />{" "}
+                  </PrivateRoute>
+                }
+              />
               <Route path="/badge" element={<Badges />} />
               <Route path="/buttons" element={<Buttons />} />
               <Route path="/images" element={<Images />} />

@@ -8,7 +8,7 @@ import PageMeta from "../../components/common/PageMeta";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import Label from "../../components/form/Label";
 
-const updatePurchaseOrderSchema = z.object({
+const uploadModemsSchema = z.object({
   excelFile: z
     .any()
     .refine((files) => files?.length === 1, "An Excel file is required")
@@ -29,6 +29,8 @@ const updatePurchaseOrderSchema = z.object({
     }, "File size must be less than 5MB"),
 });
 
+type UploadModemsFormData = z.infer<typeof uploadModemsSchema>;
+
 export default function UploadModems() {
   const { id } = useParams<{ id: string }>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -43,11 +45,9 @@ export default function UploadModems() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<any>({
-    resolver: zodResolver(updatePurchaseOrderSchema),
+  } = useForm<UploadModemsFormData>({
+    resolver: zodResolver(uploadModemsSchema),
     defaultValues: {
-      quantity_ordered: 0,
-      supplier_id: 0,
       excelFile: undefined,
     },
   });
@@ -164,11 +164,11 @@ export default function UploadModems() {
                     </div>
                   </div>
                 </div>
-                {/* {errors.excelFile && (
+                {errors.excelFile && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.excelFile.message}
+                    {errors.form?.message}
                   </p>
-                )} */}
+                )}
               </div>
 
               <div>

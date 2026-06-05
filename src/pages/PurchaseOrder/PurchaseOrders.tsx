@@ -252,9 +252,7 @@ export default function PurchaseOrders() {
                             >
                               <i className="bi bi-trash"></i>
                             </button>
-                            <Link
-                              to={`/upload-purchase-order/${purchaseOrder.id}`}
-                            >
+                            <Link to={`/upload-modems/${purchaseOrder.id}`}>
                               <button
                                 type="button"
                                 style={{ fontSize: "20px" }}
